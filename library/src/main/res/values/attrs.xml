@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TrackView">
+        <attr name="inner_length" format="dimension"/>
+        <attr name="inner_distance" format="dimension"/>
+        <attr name="inner_stroke_width" format="dimension"/>
+        <attr name="inner_stroke_color" format="color"/>
+        <attr name="out_stroke_color" format="color"/>
+        <attr name="out_stroke_width" format="dimension"/>
+        <attr name="inner_content_color" format="color"/>
+        <attr name="blank_left" format="dimension"/>
+        <attr name="blank_right" format="dimension"/>
+        <attr name="blank_top" format="dimension"/>
+        <attr name="blank_bottom" format="dimension"/>
+    </declare-styleable>
+</resources>

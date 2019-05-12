@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="50sp"
+        android:text="HELLO"/>
+    <com.github.xiaogegechen.library.TrackView
+        android:id="@+id/track_view"
+        android:layout_marginTop="50dp"
+        android:layout_width="50dp"
+        android:layout_height="100dp"
+        app:inner_distance="10dp"
+        app:inner_length="10dp"
+        app:inner_stroke_width="2dp"
+        app:blank_bottom="20dp"
+        app:blank_left="15dp"
+        app:blank_right="15dp"
+        app:blank_top="60dp"
+        app:inner_content_color="@color/colorAccent"
+        app:inner_stroke_color="#000000"
+        app:out_stroke_color="@color/colorAccent"
+        app:out_stroke_width="1dp"/>
+</FrameLayout>
