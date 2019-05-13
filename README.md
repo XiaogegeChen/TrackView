@@ -1,6 +1,6 @@
 [![](https://jitpack.io/v/XiaogegeChen/TrackView.svg)](https://jitpack.io/#XiaogegeChen/TrackView)
 # TrackView(仿知乎可拖动悬停按钮)
-![0](https://github.com/XiaogegeChen/TrackView/blob/master/screenshot/device-2019-05-11-203831.gif)
+![0](https://github.com/XiaogegeChen/TrackView/blob/master/screenshot/device-2019-05-13-162018.gif)
 ## 主要功能
 1. 随手拖动<br>
 2. 响应点击事件<br>
