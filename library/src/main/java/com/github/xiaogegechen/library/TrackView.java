@@ -1,5 +1,6 @@
 package com.github.xiaogegechen.library;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -24,6 +25,9 @@ public class TrackView extends View {
 
     // 默认判定为CANCEL模式的时长
     private static final int CANCEL_INTERVAL_DEFAULT = 500;
+
+    // 松手后回到侧边的默认时长
+    private static final int GO_TO_BOUNDARY_INTERVAL_DEFAULT = 100;
 
     // 默认的外围padding
     private static final int PADDING_DEFAULT = 3;
@@ -102,6 +106,10 @@ public class TrackView extends View {
 
     // 根据当前这个事件序列判定的模式
     private Mode mMode = Mode.NONE;
+
+    // 是否需要调整位置，因为初始的时候如果没有触摸事件，该view不受边界约束，
+    // 因此需要在渲染结束后进行微调，这个变量记录是否进行了微调。
+    private boolean mAlreadyAdjust = false;
 
     // 屏幕像素
     private int mScreenWidthInPixel;
@@ -190,6 +198,15 @@ public class TrackView extends View {
         canvas.drawCircle (getWidth () >> 1, getHeight () >> 1, Math.min (mOutWidth >> 1, mOutHeight >> 1), mOutPaint);
         canvas.drawCircle (getWidth () >> 1, getHeight () >> 1, Math.min (mOutWidth >> 1, mOutHeight >> 1), mInContentPaint);
         canvas.drawPath (mInPath, mInPaint);
+
+        // 如果需要微调的话，进行微调
+        if(!mAlreadyAdjust){
+
+            // 就近靠边
+            setTranslationX (mBlankLeft - getX ());
+
+            mAlreadyAdjust = true;
+        }
     }
 
     @Override
@@ -229,20 +246,36 @@ public class TrackView extends View {
 
                 // 根据当前的模式设置是否调用点击事件
                 if(mMode == Mode.CLICK){
+
+                    // 点击事件不需要移动
                     performClick ();
-                }
+                } else{
+                    if(x > mBlankLeft && x < (mScreenWidthInPixel - mBlankRight)){
 
-                // 回到侧面
-                if(event.getRawX () < mScreenWidthInPixel / 2){
+                        // 离开点在边界之外不需要移动
+                        // 回到侧面
+                        if(event.getRawX () < mScreenWidthInPixel / 2){
 
-                    // 回到最左侧
-                    setTranslationX (getTranslationX () + (-1 * (x - mDisX - mBlankLeft)));
-                    x = x - (x - mDisX - mBlankLeft);
-                }else{
+                            // 回到最左侧
 
-                    // 回到最右侧
-                    setTranslationX (getTranslationX () + ((mScreenWidthInPixel - mBlankRight) - (Math.min (mOutWidth, mOutHeight) - mDisX + x)));
-                    x = x + (mScreenWidthInPixel - mBlankRight) - (Math.min (mOutWidth, mOutHeight) - mDisX + x);
+                            ObjectAnimator.ofFloat (this,
+                                    "TranslationX",
+                                    getX (),
+                                    getTranslationX () + (-1 * (x - mDisX - mBlankLeft))
+                            ).setDuration (GO_TO_BOUNDARY_INTERVAL_DEFAULT).start ();
+                            x = x - (x - mDisX - mBlankLeft);
+                        }else{
+
+                            // 回到最右侧
+                            ObjectAnimator.ofFloat (this,
+                                    "TranslationX",
+                                    getX (),
+                                    getTranslationX () + ((mScreenWidthInPixel - mBlankRight) - (Math.min (mOutWidth, mOutHeight) - mDisX + x))
+                            ).setDuration (GO_TO_BOUNDARY_INTERVAL_DEFAULT).start ();
+
+                            x = x + (mScreenWidthInPixel - mBlankRight) - (Math.min (mOutWidth, mOutHeight) - mDisX + x);
+                        }
+                    }
                 }
 
                 // 这个事件序列结束，重置当前的模式
