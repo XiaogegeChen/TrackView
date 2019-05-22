@@ -8,6 +8,9 @@
         <attr name="out_stroke_color" format="color"/>
         <attr name="out_stroke_width" format="dimension"/>
         <attr name="inner_content_color" format="color"/>
+        <attr name="inner_text" format="string"/>
+        <attr name="inner_text_color" format="color"/>
+        <attr name="inner_text_size" format="dimension"/>
         <attr name="blank_left" format="dimension"/>
         <attr name="blank_right" format="dimension"/>
         <attr name="blank_top" format="dimension"/>
