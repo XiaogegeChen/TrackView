@@ -1,11 +1,13 @@
 [![](https://jitpack.io/v/XiaogegeChen/TrackView.svg)](https://jitpack.io/#XiaogegeChen/TrackView)
 # TrackView(仿知乎可拖动悬停按钮)
-![0](https://github.com/XiaogegeChen/TrackView/blob/master/screenshot/device-2019-05-13-162018.gif)
+![0](https://github.com/XiaogegeChen/TrackView/blob/master/screenshot/v2.0.gif)
 ## 主要功能
-1. 随手拖动<br>
-2. 响应点击事件<br>
-3. 全屏拖动，也可以限定位置<br>
-4. 可通过xml配置颜色和内部样式<br>
+* 随手拖动<br>
+* 展开闭合<br>
+* 动态更改文字<br>
+* 全屏拖动，也可以限定位置<br>
+* 响应点击事件<br>
+* 可通过xml配置颜色和内部样式<br>
 ## 快速使用
 1.在工程根目录的build.gradle中添加依赖
 ```
@@ -18,21 +20,27 @@ allprojects {
     }
 }
 ```
-2.在工程目录的build.gradle中添加依赖(x.y查看最上面的版本号进行替换)
+2.在工程目录的build.gradle中添加依赖(查看最上面的版本号进行替换)
 ```
-implementation 'com.github.XiaogegeChen:TrackView:x.y'
+implementation 'com.github.XiaogegeChen:TrackView:2.0'
 ```
 3.在xml中配置
 ```
 <com.github.xiaogegechen.library.TrackView
         android:id="@+id/track_view"
-        android:layout_marginTop="50dp"
-        android:layout_width="50dp"
-        android:layout_height="100dp" />
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:padding="3dp"
+        android:layout_margin="30dp"
+        app:inner_text="下一个回答"/>
 ```
 
-## 可配置的属性
-```
+## 可配置的属性（请更新至最新版本）
+```     
+app:inner_text 文字，可动态更改
+app:inner_text_color 文字颜色
+app:inner_text_size 文字尺寸，单位sp
+ 
 app:inner_distance 是两个箭头之间的间距
 app:inner_length 是每个箭头的边长
 app:inner_stroke_width 是两个箭头的线条宽
@@ -52,9 +60,8 @@ app:out_stroke_width 是外圆线条的线宽
         trackView.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick(View v) {
-                
-                // 点击逻辑
-                Toast.makeText (MainActivity.this, "点击了拖动按钮",  Toast.LENGTH_SHORT).show ();
+                textView.setText ("WORLD");
+                Toast.makeText (MainActivity.this,  "click", Toast.LENGTH_SHORT).show ();
             }
         });
 ```
