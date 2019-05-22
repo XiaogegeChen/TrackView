@@ -53,6 +53,35 @@ app:inner_stroke_color 是两个箭头的线条颜色
 app:out_stroke_color 是外圆线条的颜色
 app:out_stroke_width 是外圆线条的线宽
 ```
+
+## 展开与闭合、动态更改文字
+```
+        findViewById (R.id.open).setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                // 展开
+                trackView.open ();
+            }
+        });
+        
+        findViewById (R.id.close).setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                // 闭合
+                trackView.close ();
+            }
+        });
+        
+        findViewById (R.id.change).setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                // 动态更改文字
+                trackView.setText ("num:" + num);
+                num++;
+            }
+        });
+```
+
 ## 监听点击事件
 ```
         final TrackView trackView = findViewById (R.id.track_view);
@@ -68,6 +97,10 @@ app:out_stroke_width 是外圆线条的线宽
 ## 原理分析
 可参考 [仿知乎可拖动悬停按钮](https://blog.csdn.net/qq_40909351/article/details/90116874)
 ## 更新日志
+
+v2.0
+
+
 v1.1
 * 吸附到侧面时增加动画效果
 * 修复之前版本中手指离开点在边界之外时悬浮球错误的移动的bug
