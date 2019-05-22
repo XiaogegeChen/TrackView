@@ -15,7 +15,6 @@ import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +24,6 @@ import android.view.WindowManager;
  * 自定义仿知乎全屏可自由拖拽按钮
  */
 public class TrackView extends View {
-
-    private static final String TAG = "TrackView";
 
     // 默认大小
     private static final int SIZE_DEFAULT = 50;
@@ -38,7 +35,7 @@ public class TrackView extends View {
     private static final int GO_TO_BOUNDARY_INTERVAL_DEFAULT = 100;
 
     // 合上的默认时长
-    private static final int CLOSE_INTERVAL_DEFAULT = 500;
+    private static final int CLOSE_INTERVAL_DEFAULT = 200;
 
     // 默认控件活动边界留白
     private static final int BLANK_LEFT_DEFAULT = 10;
@@ -47,13 +44,13 @@ public class TrackView extends View {
     private static final int BLANK_BOTTOM_DEFAULT = 10;
 
     // 默认外围线条的颜色
-    private static final int OUT_STROKE_COLOR_DEFAULT = Color.BLACK;
+    private static final int OUT_STROKE_COLOR_DEFAULT = Color.parseColor ("#4A000000");
 
     // 默认的外围线宽
     private static final int OUT_STROKE_WIDTH_DEFAULT = 1;
 
     // 默认的内部线宽
-    private static final int IN_STROKE_WIDTH_DEFAULT = 1;
+    private static final int IN_STROKE_WIDTH_DEFAULT = 2;
 
     // 默认内部线条的颜色
     private static final int IN_STROKE_COLOR_DEFAULT = Color.BLACK;
@@ -535,7 +532,7 @@ public class TrackView extends View {
                     }
 
                     // 改变view大小
-                    setLayoutParams (params);
+                    requestLayout ();
                 }
             };
         }
@@ -601,7 +598,7 @@ public class TrackView extends View {
                     }
 
                     // 改变view大小
-                    setLayoutParams (params);
+                    requestLayout ();
                 }
             };
         }

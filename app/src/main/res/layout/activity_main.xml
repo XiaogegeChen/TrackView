@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#00FFFFFF"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
-
     <TextView
         android:id="@+id/text_view"
         android:layout_width="match_parent"
@@ -12,25 +12,31 @@
         android:gravity="center"
         android:text="HELLO"
         android:textSize="50sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/open"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="展开"/>
+        <Button
+            android:id="@+id/close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="关闭"/>
+        <Button
+            android:id="@+id/change"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="改变文字"/>
+    </LinearLayout>
     <com.github.xiaogegechen.library.TrackView
-        android:padding="3dp"
-        android:layout_marginLeft="10dp"
         android:id="@+id/track_view"
-        android:layout_marginTop="30dp"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
-        app:inner_distance="8dp"
-        app:inner_length="10dp"
-        app:inner_stroke_width="1dp"
-        app:blank_bottom="15dp"
-        app:blank_left="8dp"
-        app:blank_right="8dp"
-        app:blank_top="30dp"
-        app:inner_content_color="#ffffff"
-        app:inner_stroke_color="#000000"
-        app:out_stroke_color="#000000"
-        app:out_stroke_width="1dp"
-        app:inner_text_size="30sp"
-        app:inner_text_color="@color/colorAccent"
-        app:inner_text="hello"/>
+        android:padding="3dp"
+        android:layout_margin="30dp"
+        app:inner_text="下一个回答"/>
 </FrameLayout>
