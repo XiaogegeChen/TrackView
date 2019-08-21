@@ -30,7 +30,7 @@
             android:id="@+id/change"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="改变文字"/>
+            android:text="改变文字" />
     </LinearLayout>
     <com.github.xiaogegechen.library.TrackView
         android:id="@+id/track_view"
@@ -38,5 +38,7 @@
         android:layout_height="50dp"
         android:padding="3dp"
         android:layout_margin="30dp"
-        app:inner_text="下一个回答"/>
+        app:inner_text="下一个回答"
+        app:out_stroke_width="0dp"
+        app:elevation="0dp"/>
 </FrameLayout>

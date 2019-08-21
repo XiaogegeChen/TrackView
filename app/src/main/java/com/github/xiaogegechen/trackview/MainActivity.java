@@ -1,6 +1,8 @@
 package com.github.xiaogegechen.trackview;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,41 +24,24 @@ public class MainActivity extends AppCompatActivity {
         final TrackView trackView = findViewById (R.id.track_view);
         final TextView textView = findViewById (R.id.text_view);
 
-        textView.setOnClickListener (new View.OnClickListener () {
-            @Override
-            public void onClick(View v) {
-                Log.d (TAG, "onClick: text_view");
-            }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            trackView.setZ (8);
+//        }
+
+        textView.setOnClickListener (v -> Log.d (TAG, "onClick: text_view"));
+
+        trackView.setOnClickListener (v -> {
+            textView.setText ("WORLD");
+            Toast.makeText (MainActivity.this,  "click", Toast.LENGTH_SHORT).show ();
         });
 
-        trackView.setOnClickListener (new View.OnClickListener () {
-            @Override
-            public void onClick(View v) {
-                textView.setText ("WORLD");
-                Toast.makeText (MainActivity.this,  "click", Toast.LENGTH_SHORT).show ();
-            }
-        });
+        findViewById (R.id.close).setOnClickListener (v -> trackView.close ());
 
-        findViewById (R.id.close).setOnClickListener (new View.OnClickListener () {
-            @Override
-            public void onClick(View v) {
-                trackView.close ();
-            }
-        });
+        findViewById (R.id.open).setOnClickListener (v -> trackView.open ());
 
-        findViewById (R.id.open).setOnClickListener (new View.OnClickListener () {
-            @Override
-            public void onClick(View v) {
-                trackView.open ();
-            }
-        });
-
-        findViewById (R.id.change).setOnClickListener (new View.OnClickListener () {
-            @Override
-            public void onClick(View v) {
-                trackView.setText ("num:"+num);
-                num++;
-            }
+        findViewById (R.id.change).setOnClickListener (v -> {
+            trackView.setText ("num:"+num);
+            num++;
         });
 
     }

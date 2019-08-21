@@ -12,13 +12,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+
+import androidx.annotation.Nullable;
 
 /**
  * 自定义仿知乎全屏可自由拖拽按钮
@@ -518,22 +519,19 @@ public class TrackView extends View {
 
         // 监听动画进度
         if (mCloseAnimatorUpdateListener == null) {
-            mCloseAnimatorUpdateListener = new ValueAnimator.AnimatorUpdateListener () {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    ViewGroup.LayoutParams params = getLayoutParams ();
-                    params.height = getHeight ();
-                    params.width = (Integer) animation.getAnimatedValue ();
+            mCloseAnimatorUpdateListener = animation -> {
+                ViewGroup.LayoutParams params = getLayoutParams ();
+                params.height = getHeight ();
+                params.width = (Integer) animation.getAnimatedValue ();
 
-                    //如果在右侧的话需要先改变位置，再改变大小
-                    if(mPosition == Position.RIGHT){
-                        setTranslationX (getTranslationX () + (mLastWidth - params.width));
-                        mLastWidth = params.width;
-                    }
-
-                    // 改变view大小
-                    requestLayout ();
+                //如果在右侧的话需要先改变位置，再改变大小
+                if(mPosition == Position.RIGHT){
+                    setTranslationX (getTranslationX () + (mLastWidth - params.width));
+                    mLastWidth = params.width;
                 }
+
+                // 改变view大小
+                requestLayout ();
             };
         }
         animator.addUpdateListener (mCloseAnimatorUpdateListener);
@@ -584,22 +582,19 @@ public class TrackView extends View {
         ValueAnimator animator = ValueAnimator.ofInt (mEndWidth, mOriginWidth);
         animator.setDuration (CLOSE_INTERVAL_DEFAULT);
         if (mOpenAnimatorUpdateListener == null) {
-            mOpenAnimatorUpdateListener = new ValueAnimator.AnimatorUpdateListener () {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    ViewGroup.LayoutParams params = getLayoutParams ();
-                    params.height = getHeight ();
-                    params.width = (Integer) animation.getAnimatedValue ();
+            mOpenAnimatorUpdateListener = animation -> {
+                ViewGroup.LayoutParams params = getLayoutParams ();
+                params.height = getHeight ();
+                params.width = (Integer) animation.getAnimatedValue ();
 
-                    //如果在右侧的话需要先改变位置，再改变大小
-                    if(mPosition == Position.RIGHT){
-                        setTranslationX (getTranslationX () + (mLastWidth - params.width));
-                        mLastWidth = params.width;
-                    }
-
-                    // 改变view大小
-                    requestLayout ();
+                //如果在右侧的话需要先改变位置，再改变大小
+                if(mPosition == Position.RIGHT){
+                    setTranslationX (getTranslationX () + (mLastWidth - params.width));
+                    mLastWidth = params.width;
                 }
+
+                // 改变view大小
+                requestLayout ();
             };
         }
         animator.addUpdateListener (mOpenAnimatorUpdateListener);
