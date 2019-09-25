@@ -22,7 +22,7 @@ allprojects {
 ```
 2.在工程目录的build.gradle中添加依赖(查看最上面的版本号进行替换)
 ```
-implementation 'com.github.XiaogegeChen:TrackView:2.0'
+implementation 'com.github.XiaogegeChen:TrackView:2.1'
 ```
 3.在xml中配置
 ```
