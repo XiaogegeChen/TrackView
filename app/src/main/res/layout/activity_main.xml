@@ -27,6 +27,11 @@
             android:layout_height="wrap_content"
             android:text="关闭"/>
         <Button
+            android:id="@+id/elevation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="elevation++"/>
+        <Button
             android:id="@+id/change"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +44,8 @@
         android:padding="3dp"
         android:layout_margin="30dp"
         app:inner_text="下一个回答"
-        app:out_stroke_width="0dp"
+        app:out_stroke_color="#00000000"
+        app:blank_top="100dp"
+        app:blank_bottom="30dp"
         app:elevation="0dp"/>
 </FrameLayout>

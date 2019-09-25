@@ -19,7 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * 自定义仿知乎全屏可自由拖拽按钮
@@ -28,83 +32,59 @@ public class TrackView extends View {
 
     // 默认大小
     private static final int SIZE_DEFAULT = 50;
-
     // 默认判定为CANCEL模式的时长
     private static final int CANCEL_INTERVAL_DEFAULT = 500;
-
     // 松手后回到侧边的默认时长
     private static final int GO_TO_BOUNDARY_INTERVAL_DEFAULT = 100;
-
     // 合上的默认时长
     private static final int CLOSE_INTERVAL_DEFAULT = 200;
-
     // 默认控件活动边界留白
     private static final int BLANK_LEFT_DEFAULT = 10;
     private static final int BLANK_RIGHT_DEFAULT = 10;
     private static final int BLANK_TOP_DEFAULT = 10;
     private static final int BLANK_BOTTOM_DEFAULT = 10;
-
     // 默认外围线条的颜色
     private static final int OUT_STROKE_COLOR_DEFAULT = Color.parseColor ("#4A000000");
-
     // 默认的外围线宽
     private static final int OUT_STROKE_WIDTH_DEFAULT = 1;
-
     // 默认的内部线宽
     private static final int IN_STROKE_WIDTH_DEFAULT = 2;
-
     // 默认内部线条的颜色
     private static final int IN_STROKE_COLOR_DEFAULT = Color.BLACK;
-
     // mInnerDistance 的默认值
     private static final int IN_DISTANCE_DEFAULT = 5;
-
     //mInnerLength 的默认值
     private static final int IN_LENGTH_DEFAULT = 10;
-
     // 默认内部填充的颜色
     private static final int IN_CONTENT_COLOR_DEFAULT = Color.WHITE;
-
     // 默认内部文字颜色
     private static final int IN_TEXT_COLOR_DEFAULT = Color.BLACK;
-
     // 默认内部文字大小sp
     private static final int IN_TEXT_SIZE_DEFAULT = 16;
-
     // 默认内部文字
     private static final String IN_TEXT_DEFAULT = "";
-
     // 外部轮廓的画笔
     private Paint mOutPaint;
-
     // 外部轮廓的路径
     private Path mOutPath;
-
     // 内部线的画笔
     private Paint mInPaint;
-
     // 内部填涂色的画笔
     private Paint mInContentPaint;
-
     // 内部填涂色的路径
     private Path mInContentPath;
-
     // 内部文字的画笔
     private Paint mInTextPaint;
-
     // 内部的path
     private Path mInPath;
-
     // 左右两个半圆的外界矩形
     private RectF mLeftRectF;
     private RectF mRightRectF;
-
     // 外部的属性
     private int mOutHeight;
     private int mOutWidth;
     private int mOutStrokeColor;
     private int mOutStrokeWidth;
-
     // 内部的属性
     private int mInnerDistance;
     private int mInnerLength;
@@ -114,60 +94,45 @@ public class TrackView extends View {
     private int mInnerTextColor;
     private int mInnerTextSize;
     private String mInnerText;
-
     // 边界属性, 单位是pixel
     private int mBlankLeft;
     private int mBlankRight;
     private int mBlankTop;
     private int mBlankBottom;
-
     // 上一次的触摸点的位置
     private int mLastX = 0;
     private int mLastY = 0;
-
     // 上一次view的宽度
     private int mLastWidth = 0;
-
     // 在这个view内部，触摸位置距离view左上角的距离
     private int mDisX;
     private int mDisY;
-
     // 一个事件序列开始时的时间，就是这个事件序列ACTION_DOWN时的时间
     private long mDownTime;
-
     // 一个事件序列结束时的时间，就是这个事件序列ACTION_UP时的时间
     private long mUpTime;
-
     // 根据当前这个事件序列判定的模式
-    private Mode mMode = Mode.NONE;
-
+    private @Mode int mMode = MODE_NONE;
     // 当前的位置
-    private Position mPosition = Position.LEFT;
-
+    private @Position int mPosition = POSITION_LEFT;
     // 动画监听器
     private AnimatorListenerAdapter mOpenAnimatorListenerAdapter;
     private ValueAnimator.AnimatorUpdateListener mOpenAnimatorUpdateListener;
     private AnimatorListenerAdapter mCloseAnimatorListenerAdapter;
     private ValueAnimator.AnimatorUpdateListener mCloseAnimatorUpdateListener;
-
     // 是否需要调整位置，因为初始的时候如果没有触摸事件，该view不受边界约束，
     // 因此需要在渲染结束后进行微调，这个变量记录是否进行了微调。
     private boolean mAlreadyAdjust = false;
-
     // 是否正在动画
     private boolean mIsInAnimation = false;
-
     // 当前是否是圆形
     private boolean mIsClosed = false;
-
     // 是否可以执行展开和闭合的动画，针对刚开始高就大于宽的情况，
     // 它是不应该有展开和闭合的能力的
     private boolean mCanDoAnimation = false;
-
     // 起始宽度和终止宽度
     private int mOriginWidth =0;
     private int mEndWidth =0;
-
     // 屏幕像素
     private int mScreenWidthInPixel;
     private int mScreenHeightInPixel;
@@ -190,7 +155,6 @@ public class TrackView extends View {
         setClickable (true);
 
         TypedArray ta = context.obtainStyledAttributes (attrs, R.styleable.TrackView);
-
         // 拿到属性值
         mInnerDistance = ta.getDimensionPixelSize (R.styleable.TrackView_inner_distance, dp2px (IN_DISTANCE_DEFAULT));
         mInnerLength = ta.getDimensionPixelSize (R.styleable.TrackView_inner_length, dp2px (IN_LENGTH_DEFAULT));
@@ -203,19 +167,52 @@ public class TrackView extends View {
         if(mInnerText == null){
             mInnerText = IN_TEXT_DEFAULT;
         }
-
         mOutStrokeColor = ta.getColor (R.styleable.TrackView_out_stroke_color, OUT_STROKE_COLOR_DEFAULT);
         mOutStrokeWidth = ta.getDimensionPixelSize (R.styleable.TrackView_out_stroke_width, dp2px (OUT_STROKE_WIDTH_DEFAULT));
-
         mBlankLeft = ta.getDimensionPixelSize (R.styleable.TrackView_blank_left, dp2px (BLANK_LEFT_DEFAULT));
         mBlankRight = ta.getDimensionPixelSize (R.styleable.TrackView_blank_right, dp2px (BLANK_RIGHT_DEFAULT));
         mBlankTop = ta.getDimensionPixelSize (R.styleable.TrackView_blank_top, dp2px (BLANK_TOP_DEFAULT));
         mBlankBottom = ta.getDimensionPixelSize (R.styleable.TrackView_blank_bottom, dp2px (BLANK_BOTTOM_DEFAULT));
-
         // 回收typedArray
         ta.recycle ();
-
         init();
+    }
+
+    private void init() {
+
+        mScreenWidthInPixel = getScreenParamsInPixel ()[0];
+        mScreenHeightInPixel = getScreenParamsInPixel ()[1];
+
+        mOutPaint = new Paint ();
+        mInPaint = new Paint ();
+        mInContentPaint = new Paint ();
+        mInTextPaint = new Paint ();
+
+        mOutPath = new Path ();
+        mInPath = new Path ();
+        mInContentPath = new Path ();
+
+        mLeftRectF = new RectF ();
+        mRightRectF = new RectF ();
+
+        mOutPaint.setStyle (Paint.Style.STROKE);
+        mOutPaint.setColor (mOutStrokeColor);
+        mOutPaint.setStrokeWidth (mOutStrokeWidth);
+        mOutPaint.setAntiAlias(true);
+
+        mInPaint.setStyle (Paint.Style.STROKE);
+        mInPaint.setColor (mInnerStrokeColor);
+        mInPaint.setStrokeWidth(mInnerStrokeWidth);
+        mInPaint.setAntiAlias(true);
+
+        mInContentPaint.setStyle (Paint.Style.FILL);
+        mInContentPaint.setColor (mInnerContentColor);
+
+        mInTextPaint.setTextAlign (Paint.Align.CENTER);
+        mInTextPaint.setStyle (Paint.Style.STROKE);
+        mInTextPaint.setColor (mInnerTextColor);
+        mInTextPaint.setTextSize (mInnerTextSize);
+        mInTextPaint.setAntiAlias(true);
     }
 
     @Override
@@ -301,7 +298,6 @@ public class TrackView extends View {
 
         // 如果需要微调的话，进行微调
         if(!mAlreadyAdjust){
-
             // 就近靠边
             setTranslationX (mBlankLeft - getX ());
             mAlreadyAdjust = true;
@@ -335,139 +331,117 @@ public class TrackView extends View {
                 mUpTime = System.currentTimeMillis ();
 
                 // 设置当前的模式
-                if(mMode != Mode.MOVE){
+                if(mMode != MODE_MOVE){
                     if(mUpTime - mDownTime >= CANCEL_INTERVAL_DEFAULT){
-                        mMode = Mode.CANCEL;
+                        mMode = MODE_CANCEL;
                     }else{
-                        mMode = Mode.CLICK;
+                        mMode = MODE_CLICK;
                     }
                 }
-
                 // 根据当前的模式设置是否调用点击事件
-                if(mMode == Mode.CLICK){
-
+                if(mMode == MODE_CLICK){
                     // 点击事件不需要移动
                     performClick ();
                 } else{
                     if(x > mBlankLeft && x < (mScreenWidthInPixel - mBlankRight)
-                            && mPosition != Position.LEFT
-                            && mPosition != Position.RIGHT){
-
+                            && mPosition != POSITION_LEFT
+                            && mPosition != POSITION_RIGHT){
                         // 离开点在边界之外不需要移动，已经在边界不需要移动
                         // 回到侧面
-                        if(event.getRawX () < mScreenWidthInPixel / 2){
-
+                        if(event.getRawX () < (float) (mScreenWidthInPixel * 1.0 / 2)){
                             // 回到最左侧
                             ObjectAnimator animator = ObjectAnimator.ofFloat (this,
                                     "TranslationX",
-                                    getX (),
+                                    getTranslationX(),
                                     getTranslationX () + (-1 * (x - mDisX - mBlankLeft))
                             );
                             animator.setDuration (GO_TO_BOUNDARY_INTERVAL_DEFAULT);
-
                             // 监听动画生命周期
                             animator.addListener (new AnimatorListenerAdapter () {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
-                                    mPosition = Position.LEFT;
+                                    mPosition = POSITION_LEFT;
                                 }
 
                                 @Override
                                 public void onAnimationStart(Animator animation) {
-                                    mPosition = Position.FLYING;
+                                    mPosition = POSITION_FLYING;
                                 }
                             });
                             animator.start ();
-
                         }else{
-
                             // 回到最右侧
                             ObjectAnimator animator = ObjectAnimator.ofFloat (this,
                                     "TranslationX",
-                                    getX (),
+                                    getTranslationX(),
                                     getTranslationX () + ((mScreenWidthInPixel - mBlankRight) - (getWidth () - mDisX + x))
                             );
-
                             // 监听动画生命周期
                             animator.addListener (new AnimatorListenerAdapter () {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
-                                    mPosition = Position.RIGHT;
+                                    mPosition = POSITION_RIGHT;
                                 }
 
                                 @Override
                                 public void onAnimationStart(Animator animation) {
-                                    mPosition = Position.FLYING;
+                                    mPosition = POSITION_FLYING;
                                 }
                             });
                             animator.setDuration (GO_TO_BOUNDARY_INTERVAL_DEFAULT);
                             animator.start ();
-
                         }
                     }
                 }
 
                 // 这个事件序列结束，重置当前的模式
-                mMode = Mode.NONE;
-
+                mMode = MODE_NONE;
                 break;
+
             case MotionEvent.ACTION_MOVE:
-
                 // 只要触发了ACTION_MOVE就设置为move模式
-                mMode = Mode.MOVE;
-
+                mMode = MODE_MOVE;
                 int dx;
                 int dy;
-
                 // 预测量的边距
                 int preXLeft = x - mDisX;
                 int preXRight = mScreenWidthInPixel - (x + getWidth () - mDisX);
                 int preYUp = y - mDisY;
                 int preYDown = mScreenHeightInPixel - (y + Math.min (mOutWidth, mOutHeight) - mDisY);
-
                 // 处理X坐标
                 if(preXLeft <= mBlankLeft){
-
                     // 超出左边界
-                    mPosition = Position.LEFT;
+                    mPosition = POSITION_LEFT;
                     dx = x - mLastX + mBlankLeft - preXLeft;
                     x = x + mBlankLeft - preXLeft;
                 }else if(preXRight <= mBlankRight){
-
                     // 超出右边界
-                    mPosition = Position.RIGHT;
+                    mPosition = POSITION_RIGHT;
                     dx = x - mLastX - (mBlankRight - preXRight);
                     x = x - (mBlankRight - preXRight);
                 }else{
-
                     // 正常
-                    mPosition = Position.FLYING;
+                    mPosition = POSITION_FLYING;
                     dx = x - mLastX;
                 }
-
                 // 处理Y坐标
                 if (preYUp <= mBlankTop) {
-
                     // 超出上边界
                     dy = y - mLastY + mBlankTop - preYUp;
                     y = y + mBlankTop - preYUp;
                 }else if(preYDown <= mBlankBottom){
-
                     // 超出下边界
                     dy = y - mLastY - (mBlankBottom - preYDown);
                     y = y - (mBlankBottom - preYDown);
                 }else {
-
                     // 正常
                     dy = y - mLastY;
                 }
 
                 setTranslationX (getTranslationX () + dx);
                 setTranslationY (getTranslationY () + dy);
-
                 break;
         }
-
         // 更新位置
         mLastX = x;
         mLastY = y;
@@ -478,15 +452,12 @@ public class TrackView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure (widthMeasureSpec, heightMeasureSpec);
-
         int widthSize = MeasureSpec.getSize (widthMeasureSpec);
         int widthMode = MeasureSpec.getMode (widthMeasureSpec);
-
         int heightSize = MeasureSpec.getSize (heightMeasureSpec);
         int heightMode = MeasureSpec.getMode (heightMeasureSpec);
 
         if(widthMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.AT_MOST){
-
             // 使用默认大小
             setMeasuredDimension (SIZE_DEFAULT, SIZE_DEFAULT);
         }else if(widthMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.EXACTLY){
@@ -498,38 +469,32 @@ public class TrackView extends View {
 
     // 合上
     public void close(){
-
         // 不能执行动画，不处理
         if(!mCanDoAnimation){
             return;
         }
-
         // 不是合上状态不处理，正在动画不处理
         if(mIsClosed || mIsInAnimation){
             return;
         }
-
         // 正在移动不处理
-        if(mPosition == Position.FLYING){
+        if(mPosition == POSITION_FLYING){
             return;
         }
 
         ValueAnimator animator = ValueAnimator.ofInt (mOriginWidth, mEndWidth);
         animator.setDuration (CLOSE_INTERVAL_DEFAULT);
-
         // 监听动画进度
         if (mCloseAnimatorUpdateListener == null) {
             mCloseAnimatorUpdateListener = animation -> {
                 ViewGroup.LayoutParams params = getLayoutParams ();
                 params.height = getHeight ();
                 params.width = (Integer) animation.getAnimatedValue ();
-
                 //如果在右侧的话需要先改变位置，再改变大小
-                if(mPosition == Position.RIGHT){
+                if(mPosition == POSITION_RIGHT){
                     setTranslationX (getTranslationX () + (mLastWidth - params.width));
                     mLastWidth = params.width;
                 }
-
                 // 改变view大小
                 requestLayout ();
             };
@@ -550,7 +515,6 @@ public class TrackView extends View {
                 public void onAnimationEnd(Animator animation) {
                     mIsInAnimation = false;
                     mIsClosed = true;
-
                     // 重置方便下次使用
                     mLastWidth = 0;
                 }
@@ -562,22 +526,18 @@ public class TrackView extends View {
 
     // 展开
     public void open(){
-
         // 不能执行动画，不处理
         if(!mCanDoAnimation){
             return;
         }
-
         // 不是合上状态不处理，正在动画不处理
         if(!mIsClosed || mIsInAnimation){
             return;
         }
-
         // 正在移动不处理
-        if(mPosition == Position.FLYING){
+        if(mPosition == POSITION_FLYING){
             return;
         }
-
         // 监听动画进度
         ValueAnimator animator = ValueAnimator.ofInt (mEndWidth, mOriginWidth);
         animator.setDuration (CLOSE_INTERVAL_DEFAULT);
@@ -586,19 +546,16 @@ public class TrackView extends View {
                 ViewGroup.LayoutParams params = getLayoutParams ();
                 params.height = getHeight ();
                 params.width = (Integer) animation.getAnimatedValue ();
-
                 //如果在右侧的话需要先改变位置，再改变大小
-                if(mPosition == Position.RIGHT){
+                if(mPosition == POSITION_RIGHT){
                     setTranslationX (getTranslationX () + (mLastWidth - params.width));
                     mLastWidth = params.width;
                 }
-
                 // 改变view大小
                 requestLayout ();
             };
         }
         animator.addUpdateListener (mOpenAnimatorUpdateListener);
-
         // 监听动画生命周期
         if (mOpenAnimatorListenerAdapter == null) {
             mOpenAnimatorListenerAdapter = new AnimatorListenerAdapter () {
@@ -613,7 +570,6 @@ public class TrackView extends View {
                 public void onAnimationEnd(Animator animation) {
                     mIsInAnimation = false;
                     mIsClosed = false;
-
                     // 重置方便下次使用
                     mLastWidth = 0;
                 }
@@ -629,77 +585,38 @@ public class TrackView extends View {
         invalidate ();
     }
 
-    public Position getPosition(){
-        return mPosition;
-    }
-
     /**
      * 该控件的三种模式,只要触发了ACTION_MOVE就是MOVE模式
      * 没有触发ACTION_MOVE但是从ACTION_DOWN开始超过了500ms就是CANCEL模式
      * 未超过就是CLICK模式
      */
-    private enum Mode{
-        // 取消，不执行任何逻辑
-        CANCEL,
-
-        // 点击，执行点击事件
-        CLICK,
-
-        // 移动模式，随手移动
-        MOVE,
-
-        // 无模式，就是复位后的状态
-        NONE
-    }
+    private static final int MODE_CANCEL = 100;
+    private static final int MODE_CLICK = 101;
+    private static final int MODE_MOVE = 102;
+    private static final int MODE_NONE = 103;
+    @IntDef(value = {
+            MODE_CANCEL,
+            MODE_CLICK,
+            MODE_MOVE,
+            MODE_NONE
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface Mode{}
 
     /**
      * view所处的位置
      * 上下边界暂时不考虑
      */
-    public enum Position{
-        LEFT,
-        RIGHT,
-
-        // 正在滑翔
-        FLYING
-    }
-
-    private void init() {
-
-        mScreenWidthInPixel = getScreenParamsInPixel ()[0];
-        mScreenHeightInPixel = getScreenParamsInPixel ()[1];
-
-        mOutPaint = new Paint ();
-        mInPaint = new Paint ();
-        mInContentPaint = new Paint ();
-        mInTextPaint = new Paint ();
-
-        mOutPath = new Path ();
-        mInPath = new Path ();
-        mInContentPath = new Path ();
-
-        mLeftRectF = new RectF ();
-        mRightRectF = new RectF ();
-
-        mOutPaint.setStyle (Paint.Style.STROKE);
-        mOutPaint.setColor (mOutStrokeColor);
-        mOutPaint.setStrokeWidth (mOutStrokeWidth);
-        mOutPaint.setAntiAlias(true);
-
-        mInPaint.setStyle (Paint.Style.STROKE);
-        mInPaint.setColor (mInnerStrokeColor);
-        mInPaint.setStrokeWidth(mInnerStrokeWidth);
-        mInPaint.setAntiAlias(true);
-
-        mInContentPaint.setStyle (Paint.Style.FILL);
-        mInContentPaint.setColor (mInnerContentColor);
-
-        mInTextPaint.setTextAlign (Paint.Align.CENTER);
-        mInTextPaint.setStyle (Paint.Style.STROKE);
-        mInTextPaint.setColor (mInnerTextColor);
-        mInTextPaint.setTextSize (mInnerTextSize);
-        mInTextPaint.setAntiAlias(true);
-    }
+    private static final int POSITION_LEFT = 1000;
+    private static final int POSITION_RIGHT = 1001;
+    private static final int POSITION_FLYING = 1002;
+    @IntDef(value = {
+            POSITION_LEFT,
+            POSITION_RIGHT,
+            POSITION_FLYING
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface Position{}
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
@@ -716,13 +633,13 @@ public class TrackView extends View {
         return (int) (spValue * fontScale + 0.5f);
     }
 
+    // 手机屏幕尺寸
     private int[] getScreenParamsInPixel(){
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;         // 屏幕宽度（像素）
         int height = dm.heightPixels;       // 屏幕高度（像素）
-
         return new int[]{width, height};
     }
 }

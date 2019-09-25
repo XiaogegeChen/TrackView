@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private int num = 0;
+    private float elevation = 8f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
         final TrackView trackView = findViewById (R.id.track_view);
         final TextView textView = findViewById (R.id.text_view);
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            trackView.setZ (8);
-//        }
 
         textView.setOnClickListener (v -> Log.d (TAG, "onClick: text_view"));
 
@@ -42,6 +39,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById (R.id.change).setOnClickListener (v -> {
             trackView.setText ("num:"+num);
             num++;
+        });
+
+        findViewById (R.id.elevation).setOnClickListener (v -> {
+            elevation ++;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                trackView.setZ (elevation);
+            }
         });
 
     }
